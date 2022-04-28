@@ -1,6 +1,7 @@
 package ru.seven.tech.account.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.seven.tech.account.utils.AccountUtils;
@@ -13,9 +14,12 @@ import ru.seven.tech.account.web.dto.NewAccountDto;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AccountsServiceImpl implements AccountService, AccountsReader {
@@ -30,16 +34,20 @@ public class AccountsServiceImpl implements AccountService, AccountsReader {
         return accountMapper.toDto(account);
     }
 
+    @Transactional
     @Override
     public void depositMoney(UUID id, BigDecimal amount) {
-        Account account = getAccountById(id);
+        log.debug("Deposit {} money for {} account", amount, id);
+        Account account = getAccountById(accountRepository::findByIdForUpdate, id);
         AccountUtils.increaseAccountsBalance(account, amount);
         accountRepository.save(account);
     }
 
+    @Transactional
     @Override
     public void withdrawMoney(UUID id, BigDecimal amount) {
-        Account account = getAccountById(id);
+        log.debug("Withdraw {} money for {} account", amount, id);
+        Account account = getAccountById(accountRepository::findByIdForUpdate, id);
         AccountUtils.decreaseAccountsBalance(account, amount);
         accountRepository.save(account);
     }
@@ -47,6 +55,7 @@ public class AccountsServiceImpl implements AccountService, AccountsReader {
     @Transactional
     @Override
     public void transferMoney(UUID from, UUID to, BigDecimal amount) {
+        log.debug("Transferring {} money from {} to {}", amount, from, to);
         withdrawMoney(from, amount);
         depositMoney(to, amount);
     }
@@ -60,12 +69,12 @@ public class AccountsServiceImpl implements AccountService, AccountsReader {
 
     @Override
     public AccountDto getById(UUID id) {
-        Account account = getAccountById(id);
+        Account account = getAccountById(accountRepository::findById, id);
         return accountMapper.toDto(account);
     }
 
-    private Account getAccountById(UUID id) {
-        return accountRepository.findById(id)
+    private Account getAccountById(Function<UUID, Optional<Account>> accountFetcher, UUID id) {
+        return accountFetcher.apply(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Account with id [%s] does not exist", id)));
     }
 }

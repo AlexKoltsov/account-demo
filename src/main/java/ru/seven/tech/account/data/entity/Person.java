@@ -1,14 +1,18 @@
 package ru.seven.tech.account.data.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
-@Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Embeddable
 public class Person {
 
     @NotEmpty
