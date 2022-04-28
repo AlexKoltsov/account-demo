@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "c44e6357-5e44-4e0e-bf77-0e641966cab3",
+		"name": "Accounts Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all accounts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get account by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/accounts/:id",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"accounts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "871cfdb4-2f31-4fba-880e-0d8b660a9354"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deposit money",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/accounts/:id/deposit?amount=10000",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"accounts",
+						":id",
+						"deposit"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "10000"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "871cfdb4-2f31-4fba-880e-0d8b660a9354"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Withdraw money",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/accounts/:id/withdraw?amount=10000",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"accounts",
+						":id",
+						"withdraw"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "10000"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "859f95ca-7a6b-4f4e-8a9a-17ecd5643971"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer money",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/accounts/:id/transfer?amount=10000&to=859f95ca-7a6b-4f4e-8a9a-17ecd5643971",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"accounts",
+						":id",
+						"transfer"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "10000"
+						},
+						{
+							"key": "to",
+							"value": "859f95ca-7a6b-4f4e-8a9a-17ecd5643971"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "871cfdb4-2f31-4fba-880e-0d8b660a9354"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open new account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"owner\": {\n        \"firstName\": \"Ivan\",\n        \"lastName\": \"Ivanov\",\n        \"age\": 30\n    },\n    \"balance\": 10000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/v1/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"v1",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "8080",
+			"type": "string"
+		}
+	]
+}
