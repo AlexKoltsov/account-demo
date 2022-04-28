@@ -5,6 +5,8 @@ import ru.seven.tech.account.data.entity.Account;
 import ru.seven.tech.account.web.dto.AccountDto;
 import ru.seven.tech.account.web.dto.NewAccountDto;
 
+import java.math.RoundingMode;
+
 
 @Component
 public class AccountMapper {
@@ -12,7 +14,7 @@ public class AccountMapper {
         AccountDto dto = new AccountDto();
         dto.setId(entity.getId());
         dto.setOwner(entity.getOwner());
-        dto.setBalance(entity.getBalance());
+        dto.setBalance(entity.getBalance().setScale(2, RoundingMode.HALF_UP));
         return dto;
     }
 
