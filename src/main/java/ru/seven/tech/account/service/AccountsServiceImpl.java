@@ -39,7 +39,6 @@ public class AccountsServiceImpl implements AccountService, AccountsReader {
 
     @Override
     public void withdrawMoney(UUID id, BigDecimal amount) {
-        // TODO: add validation on negative balance
         Account account = getAccountById(id);
         AccountUtils.decreaseAccountsBalance(account, amount);
         accountRepository.save(account);
