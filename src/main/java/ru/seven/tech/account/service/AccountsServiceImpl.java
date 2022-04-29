@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.seven.tech.account.expcetions.WrongParametersException;
 import ru.seven.tech.account.utils.AccountUtils;
 import ru.seven.tech.account.component.AccountMapper;
 import ru.seven.tech.account.data.entity.Account;
@@ -13,9 +14,8 @@ import ru.seven.tech.account.web.dto.AccountDto;
 import ru.seven.tech.account.web.dto.NewAccountDto;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -55,9 +55,19 @@ public class AccountsServiceImpl implements AccountService, AccountsReader {
     @Transactional
     @Override
     public void transferMoney(UUID from, UUID to, BigDecimal amount) {
+        if (from.equals(to)) {
+            throw new WrongParametersException("Transferring money allowed only for different accounts.");
+        }
         log.debug("Transferring {} money from {} to {}", amount, from, to);
-        withdrawMoney(from, amount);
-        depositMoney(to, amount);
+        // To avoid possible deadlocks we have to take locks in predefined order
+        Map.<UUID, BiConsumer<UUID, BigDecimal>>of(
+                        from, this::withdrawMoney,
+                        to, this::depositMoney
+                )
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(idToHandlerPair -> idToHandlerPair.getValue().accept(idToHandlerPair.getKey(), amount));
     }
 
     @Override
